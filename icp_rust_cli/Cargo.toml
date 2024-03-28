@@ -1,0 +1,12 @@
+[package]
+name = "icp_rust_cli"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+icp_rust = { path = "../icp_rust" }
+nalgebra = "0.32.4"
+rerun = "0.14.1"
+pcd-rs = "0.10.0"

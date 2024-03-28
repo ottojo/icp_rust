@@ -4,8 +4,9 @@ use rerun::external::anyhow;
 use rerun::external::glam;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    env_logger::init();
+
     let rec = rerun::RecordingStreamBuilder::new("rerun_test_pc").connect()?;
-    rec.set_time_seconds("stable_time", 0.0);
 
     let reader = DynReader::open("/home/jonas/Downloads/ism_test_cat.pcd")?;
     let points: anyhow::Result<Vec<_>> = reader.collect();
@@ -19,9 +20,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         })
         .collect();
 
-    //let points_map: Vec<glam::Vec3> =
-    //    grid(glam::Vec3::splat(-10.0), glam::Vec3::splat(10.0), 2).collect();
-
     let points_map_na: Vec<_> = points_map
         .iter()
         .cloned()
@@ -29,7 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .collect();
 
     let offset = na::Isometry3::new(
-        na::Vector3::new(0.1, 0.2, 0.3),
+        na::Vector3::new(0.1, 0.7, 0.5),
         na::Vector3::new(0.1, 0.2, 0.3),
     );
 
@@ -40,10 +38,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .map(|p| offset.transform_point(&p))
         .collect();
 
-    rec.log("map", &rerun::Points3D::new(points_map))?;
+    rec.log("icp/map", &rerun::Points3D::new(points_map))?;
 
     rec.log(
-        "scan",
+        "icp/scan",
         &rerun::Points3D::new(
             points_scan
                 .iter()
@@ -52,7 +50,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ),
     )?;
 
-    let icp_alignment = icp_rust::icp(
+    let _icp_alignment = icp_rust::icp(
         &points_map_na,
         &points_scan,
         na::Isometry3::identity(),
@@ -61,14 +59,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ..Default::default()
         },
     );
-
-    let points_transformed = points_scan
-        .iter()
-        .cloned()
-        .map(|p| icp_alignment.transform_point(&p))
-        .map(icp_rust::util::na_point_to_glam_vec);
-
-    rec.log("solution", &rerun::Points3D::new(points_transformed))?;
 
     Ok(())
 }

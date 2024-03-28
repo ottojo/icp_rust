@@ -53,7 +53,6 @@ fn calculate_correspondences(
 
 fn registration_error(
     points_map: &[Point3],
-    points_kdtree: &KdTree3<PointWithIndex>,
     points_scan: &[Point3],
     scan_transformation: &Iso,
     correspondences: &[(usize, usize)],
@@ -62,7 +61,7 @@ fn registration_error(
     let len = correspondences.len() as f32;
 
     correspondences
-        .into_iter()
+        .iter()
         .map(|&(i, j)| {
             (points_map[i].coords - scan_transformation.transform_point(&points_scan[j]).coords)
                 .norm()
@@ -142,15 +141,9 @@ pub fn icp(
         );
 
         if let Some(rec) = parameters.rec {
-            // TODO: send tf only
-            let scan_aligned: Vec<_> = points_scan
-                .iter()
-                .map(|p| current_best_transformation.transform_point(p))
-                .collect();
-
             rec.log(
-                "iteration",
-                &rerun::Points3D::new(scan_aligned.iter().cloned().map(util::na_point_to_glam_vec)),
+                "icp/scan",
+                &util::na_iso3_to_rerun_tf(&current_best_transformation),
             )
             .unwrap()
         };
@@ -161,7 +154,6 @@ pub fn icp(
 
         let registration_error = registration_error(
             points_map,
-            &kdtree_map,
             points_scan,
             &current_best_transformation,
             &correspondences,

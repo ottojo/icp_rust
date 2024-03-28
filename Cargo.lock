@@ -1716,6 +1716,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "env_filter"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a009aa4810eb158359dda09d0c87378e4bbb89b5a801f016885a4707ba24f7ea"
+dependencies = [
+ "log",
+ "regex",
+]
+
+[[package]]
 name = "env_logger"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1725,6 +1735,19 @@ dependencies = [
  "is-terminal",
  "log",
  "termcolor",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.11.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "38b35839ba51819680ba087cd351788c9a3c476841207e0b8cee0b04722343b9"
+dependencies = [
+ "anstream",
+ "anstyle",
+ "env_filter",
+ "humantime",
+ "log",
 ]
 
 [[package]]
@@ -2442,6 +2465,7 @@ dependencies = [
 name = "icp_rust_cli"
 version = "0.1.0"
 dependencies = [
+ "env_logger 0.11.3",
  "icp_rust",
  "nalgebra",
  "pcd-rs",
@@ -3992,7 +4016,7 @@ version = "0.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "018143d55fc98007af8eadf40c58a9e72cbdc38909ad0eac937239c255ceb95f"
 dependencies = [
- "env_logger",
+ "env_logger 0.10.2",
  "js-sys",
  "log",
  "log-once",
@@ -4840,7 +4864,7 @@ checksum = "e2a3bdd0368df6721666b743c61c714972a81f7e5f0952994dbdee511eaeb965"
 dependencies = [
  "anyhow",
  "document-features",
- "env_logger",
+ "env_logger 0.10.2",
  "itertools 0.12.1",
  "log",
  "puffin",

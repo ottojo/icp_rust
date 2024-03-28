@@ -10,3 +10,4 @@ icp_rust = { path = "../icp_rust" }
 nalgebra = "0.32.4"
 rerun = "0.14.1"
 pcd-rs = "0.10.0"
+env_logger = "0.11.3"
